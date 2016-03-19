@@ -62,7 +62,7 @@ class Server
      *
      * @param Connection $conn
      */
-    final public function onConnection(Connection $conn)
+    public function onConnection(Connection $conn)
     {
         $bufferStream = new CharBufferStream();
         $lookSayStream = new LookSayStream();

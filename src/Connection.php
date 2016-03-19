@@ -96,7 +96,7 @@ class Connection extends ThroughStream
      */
     private function openConnection()
     {
-        $this->process = new Process(sprintf('nice php server.php %s', $this->port));
+        $this->process = new Process(sprintf('php server.php %s', $this->port));
         $this->process->start();
 
         usleep(1000 * 100);
@@ -111,7 +111,7 @@ class Connection extends ThroughStream
      * @param string $data
      * @return void
      */
-    final public function onData(string $data)
+    public function onData(string $data)
     {
         $size = strlen(trim($data));
 
@@ -130,7 +130,7 @@ class Connection extends ThroughStream
      *
      * @return void
      */
-    final public function onClose()
+    public function onClose()
     {
         $size = strlen(trim($this->buffer));
 

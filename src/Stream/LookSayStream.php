@@ -1,6 +1,6 @@
 <?php
 /**
- * File CharBufferStream.php.
+ * File CharBufferStream.php
  *
  * @author Edward Pfremmer <epfremme@nerdery.com>
  */
