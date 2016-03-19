@@ -34,7 +34,7 @@ class CharBufferStream extends ThroughStream
         for ($i = 0; $i < strlen($data); $i++) {
             $char = @$data[$i];
 
-            if (!is_numeric($char)) {
+            if ($char === PHP_EOL) {
                 parent::write($this->buffer);
                 parent::write(PHP_EOL);
 
