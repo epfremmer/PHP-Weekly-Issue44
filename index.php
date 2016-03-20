@@ -26,4 +26,7 @@ $start = microtime(true);
 $manager = new Manager((int) $argv[2]);
 $manager->start($argv[1]);
 
-echo sprintf('total: %s', microtime(true) - $start) . PHP_EOL;
+echo PHP_EOL;
+echo sprintf('Processed: %s sequences', $argv[2]) . PHP_EOL;
+echo sprintf('Runtime: %s seconds', microtime(true) - $start) . PHP_EOL;
+echo sprintf('Memory: %s bytes', number_format(memory_get_peak_usage(true))) . PHP_EOL;

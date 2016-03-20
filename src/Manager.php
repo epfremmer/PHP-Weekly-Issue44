@@ -7,6 +7,8 @@
 
 namespace PHPWeekly\Issue44;
 
+use PHPWeekly\Issue44\Output\ProcessingOutputHelper;
+
 /**
  * Class Manager
  *
@@ -33,6 +35,11 @@ class Manager
     private $connections = [];
 
     /**
+     * @var ProcessingOutputHelper
+     */
+    private $output;
+
+    /**
      * Manager constructor
      *
      * @param int $iterations
@@ -42,11 +49,25 @@ class Manager
         $this->iterations = $iterations;
 
         $this->loop = \React\EventLoop\Factory::create();
+        $this->output = new ProcessingOutputHelper();
+    }
 
-        for ($i = 0; $i < $iterations; $i++) {
+    /**
+     * Initialize internal processing server connections pipeline
+     *
+     * Handles piping output from each subsequent connection to the next
+     * processor in line so data can be streamed through the chain as it is processed
+     *
+     * @reutrn void
+     */
+    private function initConnections()
+    {
+        for ($i = 0; $i < $this->iterations; $i++) {
             $connection = new Connection(self::STARTING_SOCKET + $i, $this->loop);
 
             $this->connections[$i] = $connection;
+
+            $this->output->register($connection, $i);
 
             if (isset($this->connections[$i-1])) {
                 $this->connections[$i-1]->pipe($connection);
@@ -62,6 +83,8 @@ class Manager
      */
     public function start(string $input)
     {
+        $this->initConnections();
+
         $this->connections[0]->write($input . PHP_EOL);
         $this->loop->run();
     }

@@ -113,11 +113,11 @@ class Connection extends ThroughStream
      */
     public function onData(string $data)
     {
-        $size = strlen(trim($data));
+        //$size = strlen(trim($data));
 
         $this->buffer .= $data;
 
-        echo sprintf("\033[33m[Sequence %s - Data Received]\e[0m: %s bytes", $this->index, $size) . PHP_EOL;
+        //echo sprintf("\033[33m[Sequence %s - Data Received]\e[0m: %s bytes", $this->index, $size) . PHP_EOL;
 
         parent::write($data);
     }
@@ -132,11 +132,12 @@ class Connection extends ThroughStream
      */
     public function onClose()
     {
-        $size = strlen(trim($this->buffer));
+        //$size = strlen(trim($this->buffer));
 
-        echo sprintf("\033[32m[Sequence %s - Complete]\e[0m: %s bytes", $this->index, $size) . PHP_EOL;
+        //echo sprintf("\033[32m[Sequence %s - Complete]\e[0m: %s bytes", $this->index, $size) . PHP_EOL;
 
         $this->buffer = null;
         $this->process->stop();
+        $this->emit('drain', [$this]);
     }
 }
