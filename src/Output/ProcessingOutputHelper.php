@@ -151,10 +151,14 @@ class ProcessingOutputHelper
 
         $rows = exec('tput lines') - 10;
 
+        ob_start();
+
         /** @var ProgressBar $progressBar */
         foreach (array_slice($this->progressBars, -$rows) as $progressBar) {
             $this->lines += $progressBar->render();
         }
+
+        echo ob_get_clean();
     }
 
     /**
