@@ -40,6 +40,11 @@ class ProgressBar
     private $progress;
 
     /**
+     * @var int
+     */
+    private $bytes;
+
+    /**
      * @var bool
      */
     private $complete = false;
@@ -103,6 +108,7 @@ class ProgressBar
      */
     public function advance(int $steps)
     {
+        $this->bytes += $steps;
         $this->progress += $steps;
 
         if ($this->progress > $this->maxSteps) {
@@ -135,7 +141,7 @@ class ProgressBar
         $this->write(self::POS_ARROW);
         $this->write(str_repeat(self::EMPTY_BAR_CHAR, $this->width - $progress));
         $this->write(self::RIGHT_BRACE);
-        $this->write(sprintf(self::BYTES_FORMAT, number_format($this->progress)));
+        $this->write(sprintf(self::BYTES_FORMAT, number_format($this->bytes)));
         $this->write(sprintf(self::PERCENT_FORMAT, $this->progress / $this->maxSteps * 100));
         $this->write($this->complete ? self::COMPLETED : '');
         $this->write(PHP_EOL);
