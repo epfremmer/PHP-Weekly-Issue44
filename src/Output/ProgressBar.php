@@ -23,6 +23,7 @@ class ProgressBar
     const BYTES_FORMAT = ' %s bytes';
     const NAME_FORMAT = "\033[34m%s\e[0m";
     const COMPLETED = " \033[32m[done]\e[0m";
+    const CLEAR_CHAR = ' ';
 
     /**
      * @var string
@@ -66,7 +67,7 @@ class ProgressBar
      */
     public function __construct(string $name = null)
     {
-        $this->name = $name ? $name . ' ' : '';
+        $this->name = $name ? $name . self::CLEAR_CHAR : '';
     }
 
     /**
@@ -175,6 +176,6 @@ class ProgressBar
     {
         $this->written = 0;
 
-        echo str_repeat(' ', max(0, $length));
+        echo str_repeat(self::CLEAR_CHAR, max(0, $length));
     }
 }
