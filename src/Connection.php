@@ -99,9 +99,15 @@ class Connection extends ThroughStream
         $this->process = new Process(sprintf('php server.php %s', $this->port));
         $this->process->start();
 
-        usleep(1000 * 100);
+        $start = microtime(true);
 
-        $client = stream_socket_client($this->addr);
+        while (!$client = @stream_socket_client($this->addr)) {
+            // try try again
+            if (microtime(true) - $start > 1) {
+                break; // waited too long - abort
+            }
+        }
+
         $this->conn = new \React\Stream\Stream($client, $this->loop);
     }
 
