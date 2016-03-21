@@ -67,7 +67,7 @@ class ProgressBar
      */
     public function __construct(string $name = null)
     {
-        $this->name = $name ? $name . self::CLEAR_CHAR : '';
+        $this->name = $name ? $name . ' ' : '';
     }
 
     /**
