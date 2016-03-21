@@ -81,6 +81,7 @@ class Manager
 
         $last = end($this->connections);
         $last->on('drain', [$this, 'setResult']);
+        $last->setBuffering(true);
     }
 
     /**

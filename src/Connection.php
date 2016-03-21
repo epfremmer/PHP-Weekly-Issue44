@@ -58,12 +58,18 @@ class Connection extends ThroughStream
     private $buffer;
 
     /**
+     * @var bool
+     */
+    private $buffering;
+
+    /**
      * Connection constructor
      *
      * @param int $port
      * @param LoopInterface $loop
+     * @param bool $buffering
      */
-    public function __construct(int $port, LoopInterface $loop)
+    public function __construct(int $port, LoopInterface $loop, bool $buffering = false)
     {
         parent::__construct();
 
@@ -71,10 +77,28 @@ class Connection extends ThroughStream
         $this->index = $port - Manager::STARTING_SOCKET;
         $this->addr = sprintf('tcp://127.0.0.1:%s', $port);
         $this->loop = $loop;
+        $this->buffering = $buffering;
     }
 
     /**
-     * @param string $data
+     * Set buffering flag
+     *
+     * Allows output to be stored in internal buffer
+     * for later use
+     *
+     * @param bool $buffering
+     * @return void
+     */
+    public function setBuffering(bool $buffering)
+    {
+        $this->buffering = $buffering;
+    }
+
+    /**
+     * Write data to the internal socket connection and
+     * send result to any piped streams
+     *
+     * {@inheritdoc}
      */
     public function write($data)
     {
@@ -119,7 +143,9 @@ class Connection extends ThroughStream
      */
     public function onData(string $data)
     {
-        $this->buffer .= $data;
+        if ($this->buffering) {
+            $this->buffer .= $data;
+        }
 
         parent::write($data);
     }
