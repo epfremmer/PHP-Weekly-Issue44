@@ -25,8 +25,9 @@ __Iterations:__
  * 40: _215,633 bytes (6.7548570632935 seconds)_
  * 50: _3,054,783 bytes (35.074362039566 seconds)_
  * 60: _43,284,143 bytes (449.2701048851 seconds)_
- * 70: _~613,334,248 bytes (6370.3320558071 seconds)_ 
- * 80: _... still running ..._
+ * 70: _613,329,735 bytes (6370.3320558071 seconds)_ 
+ * ...
+ * 300: _... still running ..._
  
 ![System Performance](performance.png)
 
