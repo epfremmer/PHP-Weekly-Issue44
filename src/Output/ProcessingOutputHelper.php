@@ -23,6 +23,7 @@ use React\Stream\WritableStreamInterface;
 class ProcessingOutputHelper
 {
     const AVG_MAX_SIZE_INCREASE = 1.3;
+    const MAX_FRAME_PER_SEC = 24;
 
     /**
      * @var ProgressBar[]
@@ -33,6 +34,11 @@ class ProcessingOutputHelper
      * @var int
      */
     private $lines = 0;
+
+    /**
+     * @var int
+     */
+    private $last;
 
     /**
      * Register a new stream with the output helper to be rendered
@@ -76,7 +82,7 @@ class ProcessingOutputHelper
         $progressBar = $this->progressBars[$sequence];
 
         if ($previous = $this->getPrev($sequence)) {
-            $progressBar->setMaxSteps(ceil($previous->getMaxSteps() * self::AVG_MAX_SIZE_INCREASE));
+            $progressBar->setMaxSteps(floor($previous->getMaxSteps() * self::AVG_MAX_SIZE_INCREASE));
         }
 
         $progressBar->advance(strlen($data));
@@ -97,7 +103,7 @@ class ProcessingOutputHelper
         $progressBar->complete();
 
         $this->recalculateMaxSteps($sequence);
-        $this->render();
+        $this->render(true);
     }
 
     /**
@@ -143,13 +149,20 @@ class ProcessingOutputHelper
     /**
      * Render all possible progress bars
      *
+     * @param bool $force
      * @return void
      */
-    public function render()
+    public function render(bool $force = false)
     {
-        $this->clear();
-
         $rows = exec('tput lines') - 10;
+        $time = microtime(true);
+        $fps = 1 / ($time - $this->last);
+
+        if (!$force && $fps > self::MAX_FRAME_PER_SEC) {
+            return;
+        }
+
+        $this->clear();
 
         ob_start();
 
@@ -159,6 +172,8 @@ class ProcessingOutputHelper
         }
 
         echo ob_get_clean();
+
+        $this->last = $time;
     }
 
     /**
