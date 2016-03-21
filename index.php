@@ -41,5 +41,5 @@ if (isset($print)) {
 
 echo sprintf('Processed: %s sequences', $argv[2]) . PHP_EOL;
 echo sprintf('Runtime: %s seconds', microtime(true) - $start) . PHP_EOL;
-echo sprintf('Result Length: %s bytes', number_format(strlen(trim($result)))) . PHP_EOL;
 echo sprintf('Memory: %s bytes', number_format(memory_get_peak_usage(true))) . PHP_EOL;
+echo sprintf('Result Length: %s bytes', number_format(strlen(trim($result)))) . PHP_EOL;
