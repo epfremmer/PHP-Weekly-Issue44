@@ -134,7 +134,8 @@ class ProgressBar
      */
     public function render()
     {
-        $this->clear();
+        $previous = $this->written;
+
         $this->write(sprintf(self::NAME_FORMAT, $this->name));
         $this->write(self::LEFT_BRACE);
         $this->write(str_repeat(self::FULL_BAR_CHAR, $progress = floor($this->progress / $this->maxSteps * $this->width)));
@@ -146,6 +147,8 @@ class ProgressBar
         $this->write($this->complete ? self::COMPLETED : '');
         $this->write(PHP_EOL);
 
+        $this->overwrite($previous - $this->written);
+
         return 1;
     }
 
@@ -156,19 +159,22 @@ class ProgressBar
      */
     private function write(string $out = null)
     {
-        echo $out;
         $this->written += strlen($out);
+
+        echo $out;
     }
 
     /**
-     * Clear/overwrite last written characters from the
-     * screen with whitespace
+     * Clear/overwrite previously written remaining characters
+     * from the screen with whitespace
      *
+     * @param int $length
      * @return void
      */
-    private function clear()
+    private function overwrite(int $length)
     {
-        echo sprintf("\r%s\r", str_repeat(' ', $this->written));
         $this->written = 0;
+
+        echo str_repeat(' ', max(0, $length));
     }
 }
