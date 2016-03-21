@@ -56,11 +56,6 @@ class ProgressBar
     private $width = 50;
 
     /**
-     * @var int
-     */
-    private $written = 0;
-
-    /**
      * ProgressBar constructor
      *
      * @param $name
@@ -135,8 +130,6 @@ class ProgressBar
      */
     public function render()
     {
-        $previous = $this->written;
-
         $this->write(sprintf(self::NAME_FORMAT, $this->name));
         $this->write(self::LEFT_BRACE);
         $this->write(str_repeat(self::FULL_BAR_CHAR, $progress = floor($this->progress / $this->maxSteps * $this->width)));
@@ -145,10 +138,8 @@ class ProgressBar
         $this->write(self::RIGHT_BRACE);
         $this->write(sprintf(self::BYTES_FORMAT, number_format($this->bytes)));
         $this->write(sprintf(self::PERCENT_FORMAT, $this->progress / $this->maxSteps * 100));
-        $this->write($this->complete ? self::COMPLETED : '');
+        $this->write($this->complete ? self::COMPLETED : str_repeat(self::CLEAR_CHAR, strlen(self::COMPLETED)));
         $this->write(PHP_EOL);
-
-        $this->overwrite($previous - $this->written);
 
         return 1;
     }
@@ -160,22 +151,6 @@ class ProgressBar
      */
     private function write(string $out = null)
     {
-        $this->written += strlen($out);
-
         echo $out;
-    }
-
-    /**
-     * Clear/overwrite previously written remaining characters
-     * from the screen with whitespace
-     *
-     * @param int $length
-     * @return void
-     */
-    private function overwrite(int $length)
-    {
-        $this->written = 0;
-
-        echo str_repeat(self::CLEAR_CHAR, max(0, $length));
     }
 }
