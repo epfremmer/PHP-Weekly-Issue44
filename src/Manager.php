@@ -40,6 +40,11 @@ class Manager
     private $output;
 
     /**
+     * @var string
+     */
+    private $result;
+
+    /**
      * Manager constructor
      *
      * @param int $iterations
@@ -73,6 +78,9 @@ class Manager
                 $this->connections[$i-1]->pipe($connection);
             }
         }
+
+        $last = end($this->connections);
+        $last->on('drain', [$this, 'setResult']);
     }
 
     /**
@@ -87,5 +95,25 @@ class Manager
 
         $this->connections[0]->write($input . PHP_EOL);
         $this->loop->run();
+    }
+
+    /**
+     * Set result
+     *
+     * @param string $data
+     */
+    public function setResult(string $data)
+    {
+        $this->result = $data;
+    }
+
+    /**
+     * Return result
+     *
+     * @return string
+     */
+    public function getResult()
+    {
+        return $this->result;
     }
 }

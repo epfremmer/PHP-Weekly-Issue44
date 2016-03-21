@@ -38,11 +38,14 @@ __Iterations:__
 ## Usage
 
     Usage:
-      php index.php <seed> <iterations>
+      php index.php [options] [--] <seed> <iterations>
     
     Arguments:
       seed        Initial seed sequence
       iterations  Number iterations to process
+
+    Options:
+      --print     Display look-and-say result
      
 ## Tests
 

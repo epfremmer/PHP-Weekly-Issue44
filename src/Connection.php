@@ -128,8 +128,9 @@ class Connection extends ThroughStream
      */
     public function onClose()
     {
-        $this->buffer = null;
+        $this->emit('drain', [$this->buffer, $this]);
+
         $this->process->stop();
-        $this->emit('drain', [$this]);
+        $this->buffer = null;
     }
 }
