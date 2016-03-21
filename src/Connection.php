@@ -103,7 +103,7 @@ class Connection extends ThroughStream
 
         while (!$client = @stream_socket_client($this->addr)) {
             // try try again
-            if (microtime(true) - $start <= 1) {
+            if (microtime(true) - $start > 1) {
                 throw new \RuntimeException('Unable to connect to socket');
             }
         }
